@@ -86,20 +86,24 @@ container.innerHTML = createImagesMarcup(images)
 let currentModal;
 
 container.addEventListener("click", (event) => {
-  event.preventDefault();
-  if (event.target === event.currentTarget) {
-    return;
-  }
-  const card = event.target.closest(".gallery-image");
-  const hrefClicked = card.dataset.href;
-  const { original, description } = images.find(image => image.href == hrefClicked);
-  currentModal = basicLightbox.create(`<div class="currentModal">
+  if (event.target.classList.contains("gallery-image")) {
+    event.preventDefault();
+    const dataSource = event.target.getAttribute("data-source");
+    const description = event.target.getAttribute("alt");
+    currentModal = basicLightbox.create(`<div class="currentModal">
                                                   <img
-                                                   src="${original}"
-                                                   alt="${description}"
-                                                   width="1112"
-                                                   height="640"
+                                                    src="${dataSource}"
+                                                    alt="${description}"
+                                                    width="1112"
+                                                    height="640"
                                                   >
-                                               </div>`);
-  currentModal.show();
+                                              </div>`);
+    currentModal.show();
+  };
+});
+
+document.addEventListener("keyup", (event) => {
+  if (event.code === "Escape") {
+          currentModal.close();
+  }
 });
